@@ -1,0 +1,43 @@
+{
+  "story": {
+    "firing_coffee": "media/images/story/firing_coffee.png",
+    "reply_all_meme": "media/images/story/reply_all_meme.png",
+    "sad_apartment": "media/images/story/sad_apartment.png",
+    "determined": "media/images/story/determined.png",
+    "first_gig": "media/images/story/first_gig.png"
+  },
+
+  "typing": {
+    "exploding_keyboard": "media/images/typing/exploding_keyboard.png",
+    "finger_gym": "media/images/typing/finger_gym.png",
+    "html_vs_css": "media/images/typing/html_vs_css.png",
+    "js_monster": "media/images/typing/js_monster.png",
+    "syntax_rage": "media/images/typing/syntax_rage.png"
+  },
+
+  "items": {
+    "old_keyboard": "media/images/items/old_keyboard.png",
+    "rgb_keyboard": "media/images/items/rgb_keyboard.png",
+    "pro_keyboard": "media/images/items/pro_keyboard.png",
+    "cheap_laptop": "media/images/items/cheap_laptop.png",
+    "coffee_machine": "media/images/items/coffee_machine.png"
+  },
+
+  "vehicles": {
+    "bike": "media/images/vehicles/bike.png",
+    "beater_car": "media/images/vehicles/beater_car.png",
+    "sports_car": "media/images/vehicles/sports_car.png"
+  },
+
+  "pets": {
+    "cat": "media/images/pets/cat.png",
+    "dog": "media/images/pets/dog.png",
+    "ferret": "media/images/pets/ferret.png"
+  },
+
+  "housing": {
+    "apartment": "media/images/housing/apartment.png",
+    "starter_home": "media/images/housing/starter_home.png",
+    "dream_home": "media/images/housing/dream_home.png"
+  }
+}

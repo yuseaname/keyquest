@@ -1,0 +1,55 @@
+import { Housing } from '../types/game';
+
+export const housingOptions: Housing[] = [
+  {
+    id: 'apt-small',
+    name: 'Drafty Studio',
+    tier: 0,
+    cost: 0,
+    upkeep: 30,
+    effects: { happinessBonus: 0, energyRegen: 1 },
+  },
+  {
+    id: 'apt-cozy',
+    name: 'Cozy Apartment',
+    tier: 1,
+    cost: 1200,
+    upkeep: 90,
+    effects: { happinessBonus: 3, energyRegen: 2 },
+  },
+  {
+    id: 'city-loft',
+    name: 'City Loft',
+    tier: 2,
+    cost: 3200,
+    upkeep: 140,
+    effects: { happinessBonus: 6, energyRegen: 3 },
+  },
+  {
+    id: 'penthouse',
+    name: 'Urban Penthouse',
+    tier: 3,
+    cost: 9800,
+    upkeep: 320,
+    effects: { happinessBonus: 9, energyRegen: 4 },
+    endingFlag: 'ending-penthouse',
+  },
+  {
+    id: 'van-life',
+    name: 'Van Life',
+    tier: 3,
+    cost: 5200,
+    upkeep: 110,
+    effects: { happinessBonus: 5, energyRegen: 3 },
+    endingFlag: 'ending-nomad',
+  },
+  {
+    id: 'dream-home',
+    name: 'Countryside Dream Home',
+    tier: 3,
+    cost: 14000,
+    upkeep: 260,
+    effects: { happinessBonus: 10, energyRegen: 4 },
+    endingFlag: 'ending-dream-home',
+  },
+];
