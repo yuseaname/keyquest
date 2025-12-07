@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import hackerCelebrationImg from '../../media/images/Hacker.png';
 
-// Asset: media/images/Hacker.png. Add more jokes by extending LESSON_MESSAGES or JOB_MESSAGES below.
+// Asset: public/Hacker.png. Add more jokes by extending LESSON_MESSAGES or JOB_MESSAGES below.
 const LESSON_MESSAGES = [
   'You just hacked the alphabet. Next up: punctuation!',
   'Look at you, typing like the main character.',
@@ -90,7 +89,7 @@ export function HackerCelebration({ visible, onClose, context = 'lesson', messag
     >
       <div className="hacker-celebration-card" onMouseDown={(event) => event.stopPropagation()}>
         <div className="hacker-image-wrapper">
-          <img src={hackerCelebrationImg} alt="Cartoon hacker celebrating" />
+          <img src="/Hacker.png" alt="Cartoon hacker celebrating" />
         </div>
         <p className="eyebrow">{context === 'job' ? 'Gig cleared' : 'Lesson conquered'}</p>
         <h2>Certified Keyboard Hacker!</h2>
