@@ -8,6 +8,7 @@ import { HousingMenu } from './components/HousingMenu';
 import { InventoryPanel } from './components/InventoryPanel';
 import { JobBoard } from './components/JobBoard';
 import { Header } from './components/Header';
+import { HackerCelebration } from './components/HackerCelebration';
 import { PetMenu } from './components/PetMenu';
 import { RelationshipMenu } from './components/RelationshipMenu';
 import { ResultModal } from './components/ResultModal';
@@ -66,6 +67,8 @@ function GameScreen() {
   const [endingOpen, setEndingOpen] = useState(false);
   const [activeEndingId, setActiveEndingId] = useState<string | undefined>();
   const [goalTargets, setGoalTargets] = useState({ accuracy: currentLesson.goalAccuracy, wpm: currentLesson.goalWpm });
+  const [showHackerPopup, setShowHackerPopup] = useState(false);
+  const [hackerContext, setHackerContext] = useState<'lesson' | 'job'>('lesson');
 
   const currentChapter = chapters.find((c) => c.id === currentChapterId) ?? chapters[0];
   const currentHousing = housingOptions.find((h) => h.id === housingId);
@@ -104,6 +107,12 @@ function GameScreen() {
     setEarned(outcome.earned);
     setUnlockedChapter(outcome.unlockedChapter);
     setGoalTargets({ accuracy: outcome.goalAccuracy, wpm: outcome.goalWpm });
+    if (outcome.passed) {
+      setHackerContext(currentLesson.type === 'job' ? 'job' : 'lesson');
+      setShowHackerPopup(true);
+    } else {
+      setShowHackerPopup(false);
+    }
     setModalOpen(true);
   };
 
@@ -140,6 +149,7 @@ function GameScreen() {
     setActiveEndingId(undefined);
     setModalLesson(null);
     setModalResult(null);
+    setShowHackerPopup(false);
     setStatusMessage('Progress reset. Fresh start!');
   };
 
@@ -279,6 +289,12 @@ function GameScreen() {
         open={endingOpen}
         ending={endings.find((e) => e.id === activeEndingId)}
         onClose={() => setEndingOpen(false)}
+      />
+
+      <HackerCelebration
+        visible={showHackerPopup}
+        context={hackerContext}
+        onClose={() => setShowHackerPopup(false)}
       />
     </div>
   );
