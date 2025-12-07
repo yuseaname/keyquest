@@ -265,12 +265,14 @@ function reducer(state: GameState, action: Action): GameState {
         bestWpm: Math.max(state.lifetimeStats.bestWpm, result.wpm),
       };
 
-      // Unlock next chapter when all non-job lessons are passed
+      // Unlock next chapter when 70% of non-job lessons are completed (not necessarily passed)
+      // This allows progression even if player struggles with some lessons
       const nonJobLessons = lessons.filter((l) => l.chapterId === lesson.chapterId && l.type !== 'job');
-      const allPassed = nonJobLessons.every((l) => completed[l.id]?.passed);
+      const completedCount = nonJobLessons.filter((l) => completed[l.id]).length;
+      const completionRate = nonJobLessons.length > 0 ? completedCount / nonJobLessons.length : 0;
       const nextChapterId = lesson.chapterId + 1;
       const shouldUnlockNext =
-        allPassed &&
+        completionRate >= 0.7 &&
         chapters.some((chapter) => chapter.id === nextChapterId) &&
         !state.unlockedChapters.includes(nextChapterId);
 
@@ -385,16 +387,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
     dispatch({ type: 'COMPLETE_LESSON', lesson, result, earned, passed });
 
-    // Unlock next chapter check mirrors reducer
+    // Unlock next chapter check mirrors reducer - checks if 70% of lessons are completed
     const nonJobLessons = lessons.filter((l) => l.chapterId === lesson.chapterId && l.type !== 'job');
-    const updatedPassed = nonJobLessons.every((l) => {
-      const info = l.id === lesson.id ? { passed } : state.completedLessons[l.id];
-      return info?.passed;
+    const completedLessons = nonJobLessons.filter((l) => {
+      const info = l.id === lesson.id ? { result } : state.completedLessons[l.id];
+      return Boolean(info);
     });
+    const completionRate = nonJobLessons.length > 0 ? completedLessons.length / nonJobLessons.length : 0;
     const nextChapterId = lesson.chapterId + 1;
     const unlockedChapter =
-      passed &&
-      updatedPassed &&
+      completionRate >= 0.7 &&
       chapters.some((chapter) => chapter.id === nextChapterId) &&
       !state.unlockedChapters.includes(nextChapterId)
         ? nextChapterId
