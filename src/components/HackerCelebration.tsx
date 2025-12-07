@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import hackerCelebrationImg from '../assets/hacker-celebration.png';
+import hackerCelebrationImg from '../../media/images/Hacker.png';
 
-// Asset: src/assets/hacker-celebration.png. Add more jokes by extending LESSON_MESSAGES or JOB_MESSAGES below.
+// Asset: media/images/Hacker.png. Add more jokes by extending LESSON_MESSAGES or JOB_MESSAGES below.
 const LESSON_MESSAGES = [
   'You just hacked the alphabet. Next up: punctuation!',
   'Look at you, typing like the main character.',
