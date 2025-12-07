@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useMemo, useReducer } from 'react';
 import {
   chapters,
   choices,
@@ -13,6 +13,7 @@ import {
   endings,
 } from '../data';
 import { CompletedLesson, GameState, Lesson, Requirement, Reward, TypingResult } from '../types/game';
+import { clearSavedGame, loadGame, saveGame } from '../utils/gamePersistence';
 
 interface GameContextValue extends GameState {
   currentLesson: Lesson;
@@ -39,6 +40,7 @@ interface GameContextValue extends GameState {
   setVehicle: (vehicleId: string) => void;
   upgradeHousing: (housingId: string) => { success: boolean; reason?: string };
   recordTypingResult: (result: TypingResult) => void;
+  resetGame: () => void;
 }
 
 type Action =
@@ -52,44 +54,48 @@ type Action =
   | { type: 'BUY_VEHICLE'; vehicleId: string }
   | { type: 'ADOPT_PET'; petId: string }
   | { type: 'CHANGE_HOUSING'; housingId: string }
-  | { type: 'APPLY_STATE'; state: Partial<GameState> };
+  | { type: 'APPLY_STATE'; state: Partial<GameState> }
+  | { type: 'RESET_GAME' };
 
-const defaultRelationships = relationships.reduce<Record<string, { level: number; progress: number }>>(
-  (acc, partner) => {
+function createDefaultRelationships() {
+  return relationships.reduce<Record<string, { level: number; progress: number }>>((acc, partner) => {
     acc[partner.id] = { level: 0, progress: 0 };
     return acc;
-  },
-  {}
-);
+  }, {});
+}
 
 const defaultHousing = housingOptions[0]?.id ?? 'apt-small';
 const defaultLessonId = lessons[0].id;
 
-const initialState: GameState = {
-  money: 0,
-  happiness: 50,
-  energy: 70,
-  skill: 0,
-  currentChapterId: 0,
-  unlockedChapters: [0],
-  currentLessonId: defaultLessonId,
-  lifetimeStats: {
-    totalCharsTyped: 0,
-    correctChars: 0,
-    sessionsCompleted: 0,
-    totalTimeMs: 0,
-    bestAccuracy: 0,
-    bestWpm: 0,
-  },
-  completedLessons: {},
-  ownedItems: ['starter-laptop'],
-  ownedVehicles: ['walk'],
-  ownedPets: [],
-  housingId: defaultHousing,
-  relationships: defaultRelationships,
-  flags: {},
-  activeChoiceNodeId: choices[0]?.id,
-};
+function createInitialState(): GameState {
+  return {
+    money: 0,
+    happiness: 50,
+    energy: 70,
+    skill: 0,
+    currentChapterId: 0,
+    unlockedChapters: [0],
+    currentLessonId: defaultLessonId,
+    lifetimeStats: {
+      totalCharsTyped: 0,
+      correctChars: 0,
+      sessionsCompleted: 0,
+      totalTimeMs: 0,
+      bestAccuracy: 0,
+      bestWpm: 0,
+    },
+    completedLessons: {},
+    ownedItems: ['starter-laptop'],
+    ownedVehicles: ['walk'],
+    ownedPets: [],
+    housingId: defaultHousing,
+    relationships: createDefaultRelationships(),
+    flags: {},
+    activeChoiceNodeId: choices[0]?.id,
+  };
+}
+
+const initialState: GameState = createInitialState();
 
 function hasRequirements(state: GameState, requirements?: Requirement[]) {
   if (!requirements || requirements.length === 0) return true;
@@ -172,6 +178,42 @@ function evaluateEndings(state: GameState) {
     }
   });
   return next;
+}
+
+function hydrateState(saved?: GameState | null): GameState {
+  const base = createInitialState();
+  if (!saved) return base;
+
+  const hydrated: GameState = {
+    ...base,
+    ...saved,
+    unlockedChapters: saved.unlockedChapters ?? base.unlockedChapters,
+    lifetimeStats: { ...base.lifetimeStats, ...(saved.lifetimeStats ?? {}) },
+    completedLessons: { ...base.completedLessons, ...(saved.completedLessons ?? {}) },
+    ownedItems: saved.ownedItems ?? base.ownedItems,
+    ownedVehicles: saved.ownedVehicles ?? base.ownedVehicles,
+    ownedPets: saved.ownedPets ?? base.ownedPets,
+    relationships: { ...base.relationships, ...(saved.relationships ?? {}) },
+    flags: { ...base.flags, ...(saved.flags ?? {}) },
+    currentLessonId: saved.currentLessonId ?? base.currentLessonId,
+    housingId: saved.housingId ?? base.housingId,
+    activeChoiceNodeId: saved.activeChoiceNodeId ?? base.activeChoiceNodeId,
+  };
+
+  if (!lessons.some((lesson) => lesson.id === hydrated.currentLessonId)) {
+    hydrated.currentLessonId = base.currentLessonId;
+  }
+  if (!chapters.some((chapter) => chapter.id === hydrated.currentChapterId)) {
+    hydrated.currentChapterId = base.currentChapterId;
+  }
+
+  return evaluateEndings(hydrated);
+}
+
+function initGameState(): GameState {
+  if (typeof window === 'undefined') return initialState;
+  const saved = loadGame();
+  return hydrateState(saved);
 }
 
 function getBonuses(state: GameState) {
@@ -287,6 +329,8 @@ function reducer(state: GameState, action: Action): GameState {
       return { ...state, flags: { ...state.flags, [action.flag]: true } };
     case 'APPLY_STATE':
       return evaluateEndings({ ...state, ...action.state });
+    case 'RESET_GAME':
+      return createInitialState();
     default:
       return state;
   }
@@ -295,8 +339,12 @@ function reducer(state: GameState, action: Action): GameState {
 const GameContext = createContext<GameContextValue | null>(null);
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, initGameState);
   const bonuses = useMemo(() => getBonuses(state), [state]);
+
+  useEffect(() => {
+    saveGame(state);
+  }, [state]);
 
   const currentLesson = useMemo(() => {
     return lessons.find((lesson) => lesson.id === state.currentLessonId) ?? lessons[0];
@@ -426,6 +474,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
   };
 
   const setActiveChoiceNode = (id?: string) => dispatch({ type: 'SET_CHOICE_NODE', id });
+  const resetGame = () => {
+    clearSavedGame();
+    dispatch({ type: 'RESET_GAME' });
+  };
 
   const value = useMemo(
     () => ({
@@ -469,6 +521,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
             },
           },
         }),
+      resetGame,
     }),
     [state, currentLesson, currentChapterName, bonuses]
   );

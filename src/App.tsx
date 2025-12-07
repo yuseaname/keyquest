@@ -47,6 +47,7 @@ function GameScreen() {
     buyVehicle,
     adoptPet,
     changeHousing,
+    resetGame,
   } = useGame();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -113,6 +114,19 @@ function GameScreen() {
     } else {
       setStatusMessage('');
     }
+  };
+
+  const handleResetGame = () => {
+    const confirmed =
+      typeof window === 'undefined' ? true : window.confirm('Reset progress? This will erase your saved game.');
+    if (!confirmed) return;
+    resetGame();
+    setModalOpen(false);
+    setEndingOpen(false);
+    setActiveEndingId(undefined);
+    setModalLesson(null);
+    setModalResult(null);
+    setStatusMessage('Progress reset. Fresh start!');
   };
 
   const progress = chapterProgress(currentChapterId);
@@ -200,6 +214,17 @@ function GameScreen() {
       </div>
 
       <EndingsMenu flags={flags} />
+
+      <section className="panel">
+        <div className="panel-header">
+          <p className="eyebrow">Game Options</p>
+          <h3>Progress Control</h3>
+        </div>
+        <p className="muted small">Game auto-saves to your device. Reset wipes the save and restarts from chapter 1.</p>
+        <div className="button-row" style={{ marginTop: 8 }}>
+          <button className="secondary" onClick={handleResetGame}>Reset Game / Start Over</button>
+        </div>
+      </section>
 
       <ResultModal
         open={modalOpen}
