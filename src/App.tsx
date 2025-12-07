@@ -7,6 +7,7 @@ import { HUD } from './components/HUD';
 import { HousingMenu } from './components/HousingMenu';
 import { InventoryPanel } from './components/InventoryPanel';
 import { JobBoard } from './components/JobBoard';
+import { Header } from './components/Header';
 import { PetMenu } from './components/PetMenu';
 import { RelationshipMenu } from './components/RelationshipMenu';
 import { ResultModal } from './components/ResultModal';
@@ -248,6 +249,7 @@ function GameScreen() {
 export function App() {
   return (
     <GameProvider>
+      <Header />
       <GameScreen />
     </GameProvider>
   );

@@ -10,6 +10,11 @@
   --text: #e5edff;
   --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
   --display: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+  --forest-deep: #0f3d2e;
+  --forest-moss: #2c6e49;
+  --forest-wood: #b58250;
+  --forest-cream: #f1f3e1;
+  --header-height: 86px;
 }
 
 * {
@@ -24,6 +29,7 @@ body {
   color: var(--text);
   font-family: var(--display);
   min-height: 100vh;
+  padding-top: var(--header-height);
 }
 
 .app-shell {
