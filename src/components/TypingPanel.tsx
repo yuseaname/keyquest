@@ -1,17 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Lesson, TypingResult } from '../types/game';
+import { Hint, Lesson, TypingResult } from '../types/game';
+import { HintBox } from './HintBox';
 
 interface TypingPanelProps {
   lesson: Lesson;
   onComplete: (result: TypingResult) => void;
   onReset?: () => void;
+  goalAccuracy?: number;
+  goalWpm?: number;
+  hints?: Hint[];
 }
 
-export function TypingPanel({ lesson, onComplete, onReset }: TypingPanelProps) {
+export function TypingPanel({ lesson, onComplete, onReset, goalAccuracy, goalWpm, hints }: TypingPanelProps) {
   const [typed, setTyped] = useState('');
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [finished, setFinished] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const targetAccuracy = goalAccuracy ?? lesson.goalAccuracy;
+  const targetWpm = goalWpm ?? lesson.goalWpm;
+  const hasHints = Boolean(hints && hints.length > 0);
 
   const stats = useMemo(() => {
     const correct = typed.split('').reduce((acc, char, idx) => {
@@ -100,11 +107,13 @@ export function TypingPanel({ lesson, onComplete, onReset }: TypingPanelProps) {
       <div className="panel-header">
         <p className="eyebrow">Typing Arena</p>
         <div className="goal-chips">
-          <span className="chip">Target {lesson.goalAccuracy}% acc</span>
-          <span className="chip">{lesson.goalWpm} wpm</span>
+          <span className="chip">Target {targetAccuracy}% acc</span>
+          <span className="chip">{targetWpm} wpm</span>
           <span className="chip">Earn ${lesson.payout}</span>
         </div>
       </div>
+
+      {hasHints && <HintBox hints={hints!} />}
 
       <div className="code-preview" aria-live="polite">
         {renderTarget()}

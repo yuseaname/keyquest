@@ -1,5 +1,12 @@
 export type LessonType = 'story' | 'drill' | 'job' | 'challenge';
 
+export interface Hint {
+  id: string;
+  text: string;
+  relatedLessonId?: string;
+  relatedJobId?: string;
+}
+
 export interface TypingResult {
   accuracy: number;
   wpm: number;
@@ -8,6 +15,27 @@ export interface TypingResult {
   completed: boolean;
   correct: number;
   total: number;
+}
+
+export interface LessonChoiceEffects {
+  moneyChange?: number;
+  happinessChange?: number;
+  energyChange?: number;
+  skillChange?: number;
+  difficultyModifier?: number;
+}
+
+export interface LessonChoice {
+  id: string;
+  label: string;
+  description?: string;
+  effects?: LessonChoiceEffects;
+  storyFlag?: string;
+}
+
+export interface LessonNarrativeBranch {
+  flag: string;
+  text: string;
 }
 
 export interface Lesson {
@@ -24,6 +52,10 @@ export interface Lesson {
   tags?: string[];
   requirements?: Requirement[];
   rewards?: Reward[];
+  hints?: Hint[];
+  choices?: [LessonChoice, LessonChoice];
+  narrative?: string;
+  branchNarrative?: LessonNarrativeBranch[];
 }
 
 export interface Chapter {
@@ -151,6 +183,7 @@ export interface CompletedLesson {
   payout: number;
   passed: boolean;
   completedAt: number;
+  selectedChoiceId?: string;
 }
 
 export interface GameState {
@@ -170,4 +203,8 @@ export interface GameState {
   relationships: Record<string, { level: number; progress: number }>;
   flags: Record<string, boolean>;
   activeChoiceNodeId?: string;
+  hasStarted: boolean;
+  chosenFlags: string[];
+  lessonChoices: Record<string, string | undefined>;
+  difficultyModifier: number;
 }

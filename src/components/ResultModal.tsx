@@ -1,4 +1,5 @@
-import { Lesson, TypingResult } from '../types/game';
+import { Lesson, LessonChoice, TypingResult } from '../types/game';
+import { LessonChoicePrompt } from './LessonChoicePrompt';
 
 interface ResultModalProps {
   open: boolean;
@@ -8,6 +9,12 @@ interface ResultModalProps {
   passed: boolean;
   earned: number;
   unlockedChapter?: number;
+  choices?: [LessonChoice, LessonChoice];
+  onChoiceSelected?: (choiceId: string) => void;
+  selectedChoiceId?: string;
+  requireChoice?: boolean;
+  goalAccuracy?: number;
+  goalWpm?: number;
 }
 
 export function ResultModal({
@@ -18,8 +25,18 @@ export function ResultModal({
   passed,
   earned,
   unlockedChapter,
+  choices,
+  onChoiceSelected,
+  selectedChoiceId,
+  requireChoice,
+  goalAccuracy,
+  goalWpm,
 }: ResultModalProps) {
   if (!open || !lesson || !result) return null;
+
+  const targetGoalAccuracy = goalAccuracy ?? lesson.goalAccuracy;
+  const targetGoalWpm = goalWpm ?? lesson.goalWpm;
+  const mustChooseBeforeContinue = Boolean(requireChoice && passed && choices && !selectedChoiceId);
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true">
@@ -32,12 +49,12 @@ export function ResultModal({
           <div>
             <span className="label">Accuracy</span>
             <strong>{result.accuracy}%</strong>
-            <p className="small muted">Goal {lesson.goalAccuracy}%</p>
+            <p className="small muted">Goal {targetGoalAccuracy}%</p>
           </div>
           <div>
             <span className="label">WPM</span>
             <strong>{result.wpm}</strong>
-            <p className="small muted">Goal {lesson.goalWpm}</p>
+            <p className="small muted">Goal {targetGoalWpm}</p>
           </div>
           <div>
             <span className="label">Errors</span>
@@ -64,9 +81,24 @@ export function ResultModal({
           </div>
         )}
 
+        {choices && passed && (
+          <div className="result-choice">
+            <div className="panel-header" style={{ padding: 0, marginBottom: 8 }}>
+              <p className="eyebrow">Story Choice</p>
+              <p className="muted small">Pick one path before continuing.</p>
+            </div>
+            <LessonChoicePrompt
+              choices={choices}
+              selectedChoiceId={selectedChoiceId}
+              onChoiceSelected={(choice) => onChoiceSelected?.(choice.id)}
+            />
+          </div>
+        )}
+
         <div className="modal-actions">
-          <button className="primary" onClick={onClose}>Continue</button>
+          <button className="primary" onClick={onClose} disabled={mustChooseBeforeContinue}>Continue</button>
         </div>
+        {mustChooseBeforeContinue && <p className="small muted">Make a story choice to move forward.</p>}
       </div>
     </div>
   );

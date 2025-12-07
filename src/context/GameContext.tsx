@@ -24,7 +24,15 @@ interface GameContextValue extends GameState {
   completeLesson: (
     lesson: Lesson,
     result: TypingResult
-  ) => { passed: boolean; earned: number; unlockedChapter?: number; effectiveAccuracy: number; effectiveWpm: number };
+  ) => {
+    passed: boolean;
+    earned: number;
+    unlockedChapter?: number;
+    effectiveAccuracy: number;
+    effectiveWpm: number;
+    goalAccuracy: number;
+    goalWpm: number;
+  };
   makeChoice: (optionId: string, nodeId?: string) => { applied: boolean; reason?: string };
   setActiveChoiceNode: (id?: string) => void;
   canSatisfy: (requirements?: Requirement[]) => boolean;
@@ -41,6 +49,8 @@ interface GameContextValue extends GameState {
   upgradeHousing: (housingId: string) => { success: boolean; reason?: string };
   recordTypingResult: (result: TypingResult) => void;
   resetGame: () => void;
+  startGame: () => void;
+  chooseLessonChoice: (lesson: Lesson, choiceId: string) => { applied: boolean; reason?: string };
 }
 
 type Action =
@@ -55,6 +65,8 @@ type Action =
   | { type: 'ADOPT_PET'; petId: string }
   | { type: 'CHANGE_HOUSING'; housingId: string }
   | { type: 'APPLY_STATE'; state: Partial<GameState> }
+  | { type: 'SET_LESSON_CHOICE'; lessonId: string; choiceId: string }
+  | { type: 'START_GAME'; entryLessonId: string }
   | { type: 'RESET_GAME' };
 
 function createDefaultRelationships() {
@@ -92,6 +104,10 @@ function createInitialState(): GameState {
     relationships: createDefaultRelationships(),
     flags: {},
     activeChoiceNodeId: choices[0]?.id,
+    hasStarted: false,
+    chosenFlags: [],
+    lessonChoices: {},
+    difficultyModifier: 0,
   };
 }
 
@@ -169,6 +185,10 @@ function applyRewards(state: GameState, rewards?: Reward[]) {
   return nextState;
 }
 
+function clampStat(value: number, min = 0, max = 100) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function evaluateEndings(state: GameState) {
   let next = { ...state };
   endings.forEach((ending) => {
@@ -198,6 +218,10 @@ function hydrateState(saved?: GameState | null): GameState {
     currentLessonId: saved.currentLessonId ?? base.currentLessonId,
     housingId: saved.housingId ?? base.housingId,
     activeChoiceNodeId: saved.activeChoiceNodeId ?? base.activeChoiceNodeId,
+    hasStarted: saved?.hasStarted !== undefined ? saved.hasStarted : Boolean(saved),
+    chosenFlags: saved.chosenFlags ?? base.chosenFlags,
+    lessonChoices: { ...base.lessonChoices, ...(saved.lessonChoices ?? {}) },
+    difficultyModifier: saved.difficultyModifier ?? base.difficultyModifier,
   };
 
   if (!lessons.some((lesson) => lesson.id === hydrated.currentLessonId)) {
@@ -307,6 +331,29 @@ function reducer(state: GameState, action: Action): GameState {
       return state;
     case 'SET_CHOICE_NODE':
       return { ...state, activeChoiceNodeId: action.id };
+    case 'SET_LESSON_CHOICE': {
+      const existingLessonStatus = state.completedLessons[action.lessonId];
+      return {
+        ...state,
+        lessonChoices: { ...state.lessonChoices, [action.lessonId]: action.choiceId },
+        completedLessons: existingLessonStatus
+          ? {
+              ...state.completedLessons,
+              [action.lessonId]: { ...existingLessonStatus, selectedChoiceId: action.choiceId },
+            }
+          : state.completedLessons,
+      };
+    }
+    case 'START_GAME': {
+      const unlocked = state.unlockedChapters.includes(0) ? state.unlockedChapters : [0, ...state.unlockedChapters];
+      return {
+        ...state,
+        hasStarted: true,
+        currentChapterId: 0,
+        unlockedChapters: unlocked,
+        currentLessonId: action.entryLessonId,
+      };
+    }
     case 'BUY_ITEM':
       if (state.ownedItems.includes(action.itemId)) return state;
       return {
@@ -329,8 +376,27 @@ function reducer(state: GameState, action: Action): GameState {
       return { ...state, housingId: action.housingId };
     case 'SET_FLAG':
       return { ...state, flags: { ...state.flags, [action.flag]: true } };
-    case 'APPLY_STATE':
-      return evaluateEndings({ ...state, ...action.state });
+    case 'APPLY_STATE': {
+      const mergedFlags = action.state.flags ? { ...state.flags, ...action.state.flags } : state.flags;
+      const mergedRelationships = action.state.relationships
+        ? { ...state.relationships, ...action.state.relationships }
+        : state.relationships;
+      const mergedLessonChoices = action.state.lessonChoices
+        ? { ...state.lessonChoices, ...action.state.lessonChoices }
+        : state.lessonChoices;
+      const mergedChosenFlags = action.state.chosenFlags
+        ? Array.from(new Set([...state.chosenFlags, ...action.state.chosenFlags]))
+        : state.chosenFlags;
+
+      return evaluateEndings({
+        ...state,
+        ...action.state,
+        flags: mergedFlags,
+        relationships: mergedRelationships,
+        lessonChoices: mergedLessonChoices,
+        chosenFlags: mergedChosenFlags,
+      });
+    }
     case 'RESET_GAME':
       return createInitialState();
     default:
@@ -379,7 +445,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const completeLesson = (lesson: Lesson, result: TypingResult) => {
     const effectiveAccuracy = Math.min(100, result.accuracy + bonuses.accuracyBonus);
     const effectiveWpm = result.wpm + bonuses.wpmBonus;
-    const passed = effectiveAccuracy >= lesson.goalAccuracy && effectiveWpm >= lesson.goalWpm;
+    const accuracyGoal = Math.max(1, Math.min(100, lesson.goalAccuracy + state.difficultyModifier));
+    const wpmGoal = Math.max(1, lesson.goalWpm + state.difficultyModifier);
+    const passed = effectiveAccuracy >= accuracyGoal && effectiveWpm >= wpmGoal;
     const earned = Math.max(
       0,
       Math.round((passed ? lesson.payout : Math.floor(lesson.payout * 0.25)) * (bonuses.payoutMultiplier || 1))
@@ -402,7 +470,46 @@ export function GameProvider({ children }: { children: ReactNode }) {
         ? nextChapterId
         : undefined;
 
-    return { passed, earned, unlockedChapter, effectiveAccuracy, effectiveWpm };
+    return { passed, earned, unlockedChapter, effectiveAccuracy, effectiveWpm, goalAccuracy: accuracyGoal, goalWpm: wpmGoal };
+  };
+
+  const chooseLessonChoice = (lesson: Lesson, choiceId: string) => {
+    if (!lesson.choices || lesson.choices.length !== 2) {
+      return { applied: false, reason: 'No choices for this lesson' };
+    }
+    if (state.lessonChoices[lesson.id]) {
+      return { applied: false, reason: 'Choice already made' };
+    }
+
+    const choice = lesson.choices.find((opt) => opt.id === choiceId);
+    if (!choice) {
+      return { applied: false, reason: 'Choice not found' };
+    }
+
+    const effects = choice.effects ?? {};
+    const nextLessonChoices = { ...state.lessonChoices, [lesson.id]: choice.id };
+    const updatedCompletedLessons = state.completedLessons[lesson.id]
+      ? {
+          ...state.completedLessons,
+          [lesson.id]: { ...state.completedLessons[lesson.id], selectedChoiceId: choice.id },
+        }
+      : state.completedLessons;
+
+    dispatch({
+      type: 'APPLY_STATE',
+      state: {
+        money: Math.max(0, state.money + (effects.moneyChange ?? 0)),
+        happiness: clampStat(state.happiness + (effects.happinessChange ?? 0)),
+        energy: clampStat(state.energy + (effects.energyChange ?? 0)),
+        skill: Math.max(0, state.skill + (effects.skillChange ?? 0)),
+        difficultyModifier: clampStat(state.difficultyModifier + (effects.difficultyModifier ?? 0), -15, 25),
+        chosenFlags: choice.storyFlag ? [...state.chosenFlags, choice.storyFlag] : state.chosenFlags,
+        lessonChoices: nextLessonChoices,
+        completedLessons: updatedCompletedLessons,
+      },
+    });
+
+    return { applied: true };
   };
 
   const makeChoice = (optionId: string, nodeId?: string) => {
@@ -428,6 +535,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'SET_CHOICE_NODE', id: option.nextNodeId });
     }
     return { applied: true };
+  };
+
+  const startGame = () => {
+    const entryLessonId = chapters.find((c) => c.id === 0)?.entryLessonId ?? lessons[0].id;
+    dispatch({ type: 'START_GAME', entryLessonId });
+    dispatch({ type: 'SELECT_LESSON', lessonId: entryLessonId });
   };
 
   const buyItem = (itemId: string) => {
@@ -490,6 +603,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       chapterProgress,
       selectLesson,
       completeLesson,
+      chooseLessonChoice,
       makeChoice,
       setActiveChoiceNode,
       buyItem,
@@ -524,6 +638,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           },
         }),
       resetGame,
+      startGame,
     }),
     [state, currentLesson, currentChapterName, bonuses]
   );

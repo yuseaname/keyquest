@@ -41,6 +41,54 @@ body {
   gap: 16px;
 }
 
+.start-screen {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.start-hero {
+  background: linear-gradient(120deg, rgba(44, 110, 73, 0.4), rgba(245, 193, 92, 0.25));
+  border: 1px solid var(--outline);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.start-hero h1 {
+  margin: 6px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.start-story {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+  display: grid;
+  gap: 8px;
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.instruction-card ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
+.start-button {
+  margin-top: 12px;
+}
+
 .hud {
   display: flex;
   justify-content: space-between;
@@ -544,6 +592,11 @@ body {
   border-style: dashed;
 }
 
+.choice-card.chosen {
+  border-color: rgba(74, 222, 128, 0.7);
+  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.35);
+}
+
 .shop-grid,
 .inventory-grid,
 .relationship-grid {
@@ -567,6 +620,43 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   margin: 8px 0;
+}
+
+.hint-box {
+  border: 1px dashed var(--outline);
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(245, 193, 92, 0.06);
+}
+
+.hint-toggle {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--outline);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hint-list {
+  margin: 8px 0 0;
+  padding-left: 14px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
+.lesson-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.result-choice {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--outline);
 }
 
 @media (max-width: 960px) {

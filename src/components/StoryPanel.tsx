@@ -5,10 +5,20 @@ interface StoryPanelProps {
   lesson: Lesson;
   progress: { completed: number; total: number };
   completedLessons: Record<string, CompletedLesson>;
+  chosenFlags: string[];
 }
 
-export function StoryPanel({ chapter, lesson, progress, completedLessons }: StoryPanelProps) {
+function getNarrativeCopy(lesson: Lesson, chosenFlags: string[]) {
+  if (lesson.branchNarrative && lesson.branchNarrative.length > 0) {
+    const branch = lesson.branchNarrative.find((b) => chosenFlags.includes(b.flag));
+    if (branch) return branch.text;
+  }
+  return lesson.narrative ?? lesson.description;
+}
+
+export function StoryPanel({ chapter, lesson, progress, completedLessons, chosenFlags }: StoryPanelProps) {
   const lessonStatus = completedLessons[lesson.id];
+  const narrativeCopy = getNarrativeCopy(lesson, chosenFlags);
 
   return (
     <section className="panel story-panel">
@@ -43,7 +53,7 @@ export function StoryPanel({ chapter, lesson, progress, completedLessons }: Stor
           <div>
             <p className="eyebrow">Now practicing</p>
             <h3>{lesson.title}</h3>
-            <p className="muted">{lesson.description}</p>
+            <p className="muted">{narrativeCopy}</p>
           </div>
           <div className={`badge badge-${lesson.type}`}>{lesson.type}</div>
         </div>

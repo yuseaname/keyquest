@@ -13,6 +13,7 @@ import { RelationshipMenu } from './components/RelationshipMenu';
 import { ResultModal } from './components/ResultModal';
 import { ShopPanel } from './components/ShopPanel';
 import { StoryPanel } from './components/StoryPanel';
+import { StartScreen } from './components/StartScreen';
 import { TransportationMenu } from './components/TransportationMenu';
 import { TypingPanel } from './components/TypingPanel';
 import { GameProvider, useGame } from './context/GameContext';
@@ -35,12 +36,16 @@ function GameScreen() {
     ownedItems,
     ownedPets,
     flags,
+    chosenFlags,
+    lessonChoices,
+    difficultyModifier,
     bonuses,
     relationships,
     activeChoiceNodeId,
     getChoiceNodeById,
     canSatisfy,
     makeChoice,
+    chooseLessonChoice,
     chapterProgress,
     selectLesson,
     completeLesson,
@@ -60,11 +65,14 @@ function GameScreen() {
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [endingOpen, setEndingOpen] = useState(false);
   const [activeEndingId, setActiveEndingId] = useState<string | undefined>();
+  const [goalTargets, setGoalTargets] = useState({ accuracy: currentLesson.goalAccuracy, wpm: currentLesson.goalWpm });
 
   const currentChapter = chapters.find((c) => c.id === currentChapterId) ?? chapters[0];
   const currentHousing = housingOptions.find((h) => h.id === housingId);
   const activeVehicle = vehicles.find((v) => ownedVehicles.includes(v.id));
   const activeChoice = getChoiceNodeById(activeChoiceNodeId);
+  const effectiveGoalAccuracy = Math.max(1, Math.min(100, currentLesson.goalAccuracy + difficultyModifier));
+  const effectiveGoalWpm = Math.max(1, currentLesson.goalWpm + difficultyModifier);
 
   const jobs = useMemo(() => lessons.filter((lesson) => lesson.type === 'job'), []);
 
@@ -95,10 +103,15 @@ function GameScreen() {
     setPassed(outcome.passed);
     setEarned(outcome.earned);
     setUnlockedChapter(outcome.unlockedChapter);
+    setGoalTargets({ accuracy: outcome.goalAccuracy, wpm: outcome.goalWpm });
     setModalOpen(true);
   };
 
   const handleNext = () => {
+    if (modalLesson?.choices && passed && !lessonChoices[modalLesson.id]) {
+      setStatusMessage('Pick a story path before continuing.');
+      return;
+    }
     if (!nextSuggestedLesson) return;
     const res = selectLesson(nextSuggestedLesson.id);
     if (!res?.success) {
@@ -130,9 +143,20 @@ function GameScreen() {
     setStatusMessage('Progress reset. Fresh start!');
   };
 
+  const handleLessonChoice = (choiceId: string) => {
+    if (!modalLesson) return;
+    const result = chooseLessonChoice(modalLesson, choiceId);
+    if (!result.applied) {
+      setStatusMessage(result.reason ?? 'Could not apply choice.');
+    } else {
+      setStatusMessage('Path locked in. Story updated.');
+    }
+  };
+
   const progress = chapterProgress(currentChapterId);
 
   const discoveredEnding = useMemo(() => endings.find((ending) => flags[ending.id]), [flags]);
+  const selectedLessonChoice = modalLesson ? lessonChoices[modalLesson.id] : undefined;
 
   useEffect(() => {
     if (discoveredEnding && discoveredEnding.id !== activeEndingId) {
@@ -140,6 +164,7 @@ function GameScreen() {
       setEndingOpen(true);
     }
   }, [discoveredEnding, activeEndingId]);
+
 
   return (
     <div className="app-shell">
@@ -166,8 +191,15 @@ function GameScreen() {
           lesson={currentLesson}
           progress={progress}
           completedLessons={completedLessons}
+          chosenFlags={chosenFlags}
         />
-        <TypingPanel lesson={currentLesson} onComplete={handleComplete} />
+        <TypingPanel
+          lesson={currentLesson}
+          onComplete={handleComplete}
+          goalAccuracy={effectiveGoalAccuracy}
+          goalWpm={effectiveGoalWpm}
+          hints={currentLesson.hints}
+        />
       </main>
 
       <div className="content-grid secondary-grid">
@@ -235,6 +267,12 @@ function GameScreen() {
         passed={passed}
         earned={earned}
         unlockedChapter={unlockedChapter}
+        choices={modalLesson?.choices}
+        onChoiceSelected={handleLessonChoice}
+        selectedChoiceId={selectedLessonChoice}
+        requireChoice={passed && Boolean(modalLesson?.choices) && !selectedLessonChoice}
+        goalAccuracy={goalTargets.accuracy}
+        goalWpm={goalTargets.wpm}
       />
 
       <EndingModal
@@ -246,11 +284,23 @@ function GameScreen() {
   );
 }
 
+function GameContainer() {
+  const { hasStarted, startGame } = useGame();
+  if (!hasStarted) {
+    return (
+      <div className="app-shell">
+        <StartScreen onStart={startGame} />
+      </div>
+    );
+  }
+  return <GameScreen />;
+}
+
 export function App() {
   return (
     <GameProvider>
       <Header />
-      <GameScreen />
+      <GameContainer />
     </GameProvider>
   );
 }
