@@ -50,6 +50,7 @@ export interface Lesson {
   payout: number;
   flavor?: string;
   tags?: string[];
+  difficulty?: 'easy' | 'medium' | 'hard';
   requirements?: Requirement[];
   rewards?: Reward[];
   hints?: Hint[];

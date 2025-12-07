@@ -21,86 +21,114 @@ Now I am broke, caffeinated, and desperate to code.`,
     chapterId: 1,
     type: 'drill',
     title: 'Home Row Hustle',
-    description: 'Rebuild the basics. Feel the bump on F and J. Breathe.',
-    snippet: 'asdf jkl; asdf jkl; fj fj aj kl as lf jd ;l',
+    description: 'Ease back in with home row loops and short words before anything fancy.',
+    snippet:
+`asdf jkl asdf jkl
+sad lad fall all
+code data lava
+tag java salad`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 15,
     flavor: 'Focus on rhythm over speed.',
-    tags: ['basics', 'letters'],
+    tags: ['basics', 'letters', 'warmup'],
+    difficulty: 'easy',
   },
   {
     id: 'numbers-911',
     chapterId: 1,
     type: 'drill',
     title: 'Numbers: Emergency Fund',
-    description: 'Invoices need digits. Practice the number row before rent is due.',
-    snippet: '123 456 7890 404 500 200 808 650 1337',
+    description: 'Blend digits with short dev words so the number row feels natural.',
+    snippet:
+`code123 dev42 beta7
+stack01 hero99 js24
+save2 rent4 ship8`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 18,
     flavor: 'Stabilize your fingers on the home row between bursts.',
-    tags: ['numbers'],
+    tags: ['numbers', 'letters', 'mix'],
+    difficulty: 'easy',
   },
   {
     id: 'symbol-sprinkle',
     chapterId: 1,
     type: 'drill',
     title: 'Symbols & Sighs',
-    description: 'Semi-colons, brackets, and slashes: the seasoning of code.',
-    snippet: '{} [] () <> /? ;: {} [] () <> /? ;:',
+    description: 'Start folding punctuation into tiny phrases—no more symbol spam.',
+    snippet:
+`code, rest, save.
+debug! review? chill.
+email_ready - check in.`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 18,
     flavor: 'Keep your wrists relaxed; symbols are reach-heavy.',
-    tags: ['symbols', 'punctuation'],
+    tags: ['symbols', 'punctuation', 'letters'],
+    difficulty: 'medium',
   },
   {
     id: 'symbol-warmup-2',
     chapterId: 1,
     type: 'drill',
     title: 'Symbol Warm-Up 2',
-    description: 'Advanced coding symbols for emails, money talk, and logical operators.',
-    snippet: '@ $ % & + ++ && @@ $$ %% &&& +++',
+    description: 'Mix quotes, brackets, and math with real JS-style lines.',
+    snippet:
+`const score = 10;
+items[0] = 'bean';
+console.log("sip!");`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 20,
     flavor: 'Relax shoulders; these are lateral reaches.',
-    tags: ['symbols'],
+    tags: ['symbols', 'js', 'mix'],
+    difficulty: 'medium',
   },
   {
     id: 'bracket-marathon',
     chapterId: 1,
     type: 'drill',
     title: 'Bracket Marathon',
-    description: 'Chain parentheses, braces, brackets, and angle brackets without breaking form.',
-    snippet: '{} () [] <> {()} [<>] {<[]>} ({}[])',
+    description: 'Short functions weave braces, brackets, and comparisons with clear text.',
+    snippet:
+`function brew() {
+  const cups = [1, 2];
+  if (cups[0] > 0) {
+    return { ready: true };
+  }
+}`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 22,
     flavor: 'Aim for even pacing; open-close rhythm matters.',
-    tags: ['symbols', 'brackets'],
+    tags: ['symbols', 'brackets', 'js'],
+    difficulty: 'hard',
   },
   {
     id: 'html-skeleton',
     chapterId: 1,
     type: 'drill',
     title: 'HTML Skeleton Practice',
-    description: 'Type the core HTML5 boilerplate from muscle memory.',
+    description: 'Lightweight HTML bones with friendly copy keep symbols mixed with words.',
     snippet:
 `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Broke Coder Typer</title>
+    <title>KeyQuest Warmup</title>
   </head>
-  <body></body>
+  <body>
+    <h1>Hello, KeyQuest!</h1>
+    <p>Type calm, ship steady.</p>
+  </body>
 </html>`,
     goalAccuracy: 75,
     goalWpm: 10,
     payout: 26,
     flavor: 'Keep indentation tidy; close what you open.',
-    tags: ['html', 'structure'],
+    tags: ['html', 'structure', 'symbols', 'letters'],
+    difficulty: 'hard',
   },
   {
     id: 'html-headline',
