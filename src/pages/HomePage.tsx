@@ -6,14 +6,22 @@
 import { Link } from 'react-router-dom';
 import { useGameStore } from '@/store';
 
+const heroBackground = new URL('../../media/images/broke_coder.png', import.meta.url).href;
+
 export function HomePage() {
   const { currentCharacter, dailyQuests } = useGameStore();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-kq-dark-950 via-kq-dark-900 to-kq-dark-950">
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-6xl mx-auto text-center">
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-40"
+          style={{ backgroundImage: `url(${heroBackground})` }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-kq-dark-950/90 via-kq-dark-950/80 to-kq-dark-950/95" aria-hidden="true" />
+        <div className="relative max-w-6xl mx-auto text-center">
           <h1 className="font-display text-5xl md:text-7xl font-bold text-kq-gold-400 mb-4 animate-glow">
             Broke Coder
           </h1>
