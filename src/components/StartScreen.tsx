@@ -6,18 +6,18 @@ export function StartScreen({ onStart }: StartScreenProps) {
   return (
     <div className="start-screen">
       <div className="start-hero panel">
-        <p className="eyebrow">Prologue</p>
-        <h1>KeyQuest RPG: Lost in the Woods Digital</h1>
+        <p className="eyebrow">Origin Story</p>
+        <h1>Broke Coder: Survival Typing RPG</h1>
         <p className="muted">
-          You just got fired for a coffee-soaked keyboard. Bank account: fumes. You discover that typing and coding gigs can keep
-          the lights on while you chase a quieter life tucked away in the forest.
+          Fired for baptizing the CEO’s keyboard. Severance: zero. Your new plan? Type, code, and joke your way out of overdraft
+          fees while daydreaming about a cabin with functional Wi-Fi.
         </p>
         <ul className="start-story">
-          <li><span className="dot" /> Fired and broke, but stubborn.</li>
-          <li><span className="dot" /> Typing lessons pay the bills and unlock code quests.</li>
-          <li><span className="dot" /> Dream: earn enough to buy a cabin far from city noise.</li>
+          <li><span className="dot" /> Fired in spectacular fashion, still strangely optimistic.</li>
+          <li><span className="dot" /> Typing drills turn into coding gigs that barely beat ramen money.</li>
+          <li><span className="dot" /> Final boss: affording a quiet cabin and retiring your landlord’s stare.</li>
         </ul>
-        <button className="primary start-button" onClick={onStart}>Start Game</button>
+        <button className="primary start-button" onClick={onStart}>Start the Chaos</button>
       </div>
 
       <div className="start-grid">
@@ -25,21 +25,22 @@ export function StartScreen({ onStart }: StartScreenProps) {
           <p className="eyebrow">How to Play</p>
           <h3>Type, choose, survive</h3>
           <ul>
-            <li>Type snippets of plain text, HTML, CSS, and JavaScript exactly as shown.</li>
-            <li>Each lesson ends with a two-option story choice that branches your path.</li>
-            <li>Hints are available in lessons if you get stuck or need a reminder.</li>
-            <li>Earn cash, mood, and skill to unlock new chapters, gigs, and endings.</li>
+            <li>Type plain text, HTML, CSS, and JavaScript snippets exactly as shown—spills optional.</li>
+            <li>Every lesson ends with two ridiculous choices that nudge the story.</li>
+            <li>Hints drop mild sarcasm while reminding you how code works.</li>
+            <li>Earn just enough cash, happiness, and skill to keep the lights on.</li>
           </ul>
         </div>
         <div className="instruction-card panel">
           <p className="eyebrow">Goals</p>
           <h3>Why you’re typing</h3>
           <p className="muted">
-            Build enough momentum to escape the city grind. Upgrade your gear, pick gigs, adopt pets, and plot a path toward a
-            woodland home where deadlines feel like distant thunder.
+            Build enough momentum to escape the city grind. Upgrade dusty gear, pick sketchy gigs, adopt needy pets, and claw
+            your way toward a woodland hideout with reliable coffee.
           </p>
           <p className="muted">
-            Your choices can make lessons tougher or lighter, bring fast cash or steady calm, and unlock different endings.
+            Your choices make lessons easier or sweatier, tweak payouts, and unlock weird endings—from neon penthouses to van
+            life with fairy lights.
           </p>
         </div>
       </div>

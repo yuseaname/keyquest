@@ -1,10 +1,10 @@
 import { Vehicle } from '../types/game';
 
 export const vehicles: Vehicle[] = [
-  { id: 'walk', name: 'Walking Shoes', tier: 0, cost: 0, upkeep: 0 },
+  { id: 'walk', name: 'Hand-Me-Down Walking Shoes', tier: 0, cost: 0, upkeep: 0 },
   {
     id: 'bike',
-    name: 'Used Bike',
+    name: 'Used Bike with One Brake',
     tier: 1,
     cost: 180,
     upkeep: 4,
@@ -12,7 +12,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: 'cheap-car',
-    name: '1998 Hatchback',
+    name: '1998 Hatchback (Smells like Fries)',
     tier: 2,
     cost: 1600,
     upkeep: 14,
@@ -20,7 +20,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: 'good-car',
-    name: 'Reliable Sedan',
+    name: 'Reliableish Sedan',
     tier: 3,
     cost: 4200,
     upkeep: 28,
@@ -28,7 +28,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: 'high-end-car',
-    name: 'Electric Dream',
+    name: 'Electric Dream You Lease in Secret',
     tier: 4,
     cost: 12000,
     upkeep: 42,
@@ -36,7 +36,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: 'nomad-van',
-    name: 'Converted Van',
+    name: 'Converted Van of Eternal Side Quests',
     tier: 3,
     cost: 6800,
     upkeep: 32,

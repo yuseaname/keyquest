@@ -3,21 +3,21 @@ import { Item } from '../types/game';
 export const items: Item[] = [
   {
     id: 'starter-laptop',
-    name: 'Refurb Laptop',
+    name: 'Refurb Laptop (Fan Wheezes)',
     type: 'laptop',
     cost: 0,
     effects: { wpmBonus: 0 },
   },
   {
     id: 'mech-keyboard',
-    name: 'Clicky Keyboard',
+    name: 'Thrift-Store Mech Keyboard',
     type: 'keyboard',
     cost: 180,
     effects: { accuracyBonus: 2, wpmBonus: 1 },
   },
   {
     id: 'ultra-monitor',
-    name: 'Ultra-Wide Monitor',
+    name: 'Ultra-Wide Monitor You Definitely Can’t Afford',
     type: 'monitor',
     cost: 720,
     effects: { payoutMultiplier: 1.05 },
@@ -25,14 +25,14 @@ export const items: Item[] = [
   },
   {
     id: 'barista-coffee',
-    name: 'Barista Coffee Maker',
+    name: 'Barista Coffee Maker (Retail Therapy)',
     type: 'coffee',
     cost: 320,
     effects: { wpmBonus: 1, accuracyBonus: 1 },
   },
   {
     id: 'pro-laptop',
-    name: 'Pro Laptop',
+    name: 'Pro Laptop You Swore You’d Return',
     type: 'laptop',
     cost: 900,
     effects: { wpmBonus: 3, accuracyBonus: 1, payoutMultiplier: 1.08 },

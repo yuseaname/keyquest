@@ -3,7 +3,7 @@ import { Housing } from '../types/game';
 export const housingOptions: Housing[] = [
   {
     id: 'apt-small',
-    name: 'Drafty Studio',
+    name: 'Drafty Studio (Roommate: Mold)',
     tier: 0,
     cost: 0,
     upkeep: 30,
@@ -11,7 +11,7 @@ export const housingOptions: Housing[] = [
   },
   {
     id: 'apt-cozy',
-    name: 'Cozy Apartment',
+    name: 'Cozy Apartment with Passive-Aggressive Radiator',
     tier: 1,
     cost: 1200,
     upkeep: 90,
@@ -19,7 +19,7 @@ export const housingOptions: Housing[] = [
   },
   {
     id: 'city-loft',
-    name: 'City Loft',
+    name: 'City Loft of Questionable Wiring',
     tier: 2,
     cost: 3200,
     upkeep: 140,
@@ -27,7 +27,7 @@ export const housingOptions: Housing[] = [
   },
   {
     id: 'penthouse',
-    name: 'Urban Penthouse',
+    name: 'Urban Penthouse of Neon Regret',
     tier: 3,
     cost: 9800,
     upkeep: 320,
@@ -36,7 +36,7 @@ export const housingOptions: Housing[] = [
   },
   {
     id: 'van-life',
-    name: 'Van Life',
+    name: 'Van Life (Now with Fairy Lights)',
     tier: 3,
     cost: 5200,
     upkeep: 110,
@@ -45,7 +45,7 @@ export const housingOptions: Housing[] = [
   },
   {
     id: 'dream-home',
-    name: 'Countryside Dream Home',
+    name: 'Countryside Dream Home / Wifi Bunker',
     tier: 3,
     cost: 14000,
     upkeep: 260,

@@ -4,13 +4,13 @@ export const choices: ChoiceNode[] = [
   {
     id: 'cold-open-branch',
     chapterId: 0,
-    title: 'Reply-All Aftermath',
-    narrative: 'Your inbox explodes. A stranger DMs: "I pay for HTML gigs."',
+    title: 'Reply-All Fallout',
+    narrative: 'Your inbox turns into a landfill of pity emails and mystery gig offers.',
     options: [
       {
         id: 'accept-gig',
-        label: 'Accept the random gig',
-        outcomeText: 'You accept. Stranger sends a list and $5 promise.',
+        label: 'DM back the random giglord',
+        outcomeText: 'You send a screenshot of your cleanest <li>. Payment promised: five bucks and “exposure.”',
         rewards: [
           { type: 'money', amount: 5 },
           { type: 'flag', flag: 'took-first-gig' },
@@ -20,8 +20,8 @@ export const choices: ChoiceNode[] = [
       },
       {
         id: 'ignore',
-        label: 'Ignore the stranger',
-        outcomeText: 'Inbox quiets. Hunger does not.',
+        label: 'Mute every notification',
+        outcomeText: 'Peace returns. Hunger grows louder than Slack pings.',
         rewards: [{ type: 'stat', stat: 'happiness', delta: -2 }],
         nextNodeId: 'intro-gear',
       },
@@ -30,13 +30,13 @@ export const choices: ChoiceNode[] = [
   {
     id: 'intro-gear',
     chapterId: 1,
-    title: 'Do You Upgrade Gear?',
-    narrative: 'Your trackpad is sticky. Keyboard squeaks. Do you buy used gear?',
+    title: 'Sticky Gear Debate',
+    narrative: 'Trackpad is caramelized sugar. Keyboard squeaks like a haunted accordion.',
     options: [
       {
         id: 'buy-used',
-        label: 'Buy a used mech keyboard ($120)',
-        outcomeText: 'Clacky happiness achieved.',
+        label: 'Buy the used mech keyboard ($120)',
+        outcomeText: 'Clacks echo through the apartment; you feel 3% like a pro.',
         requirements: [{ type: 'stat', stat: 'happiness', min: 0 }],
         rewards: [
           { type: 'item', itemId: 'mech-keyboard' },
@@ -46,8 +46,8 @@ export const choices: ChoiceNode[] = [
       },
       {
         id: 'stay-broken',
-        label: 'Stick with sticky keys',
-        outcomeText: 'You save money but lose morale.',
+        label: 'Keep the sticky keys',
+        outcomeText: 'Save money, lose morale, hope your spacebar doesn’t unionize.',
         rewards: [{ type: 'stat', stat: 'happiness', delta: -3 }],
         nextNodeId: 'career-branch',
       },
@@ -57,12 +57,12 @@ export const choices: ChoiceNode[] = [
     id: 'career-branch',
     chapterId: 2,
     title: 'Pick Your Hustle',
-    narrative: 'You get two DMs: a CSS agency retainer, and a JS startup fire.',
+    narrative: 'DM #1: CSS agency retainer. DM #2: JS startup on digital fire.',
     options: [
       {
         id: 'css-agency',
         label: 'Take the CSS agency retainer',
-        outcomeText: 'You promise to polish hero sections for 12 clients.',
+        outcomeText: 'You agree to polish 12 hero sections and pretend gradients are your kink.',
         rewards: [
           { type: 'flag', flag: 'path-css' },
           { type: 'money', amount: 25 },
@@ -73,7 +73,7 @@ export const choices: ChoiceNode[] = [
       {
         id: 'js-firefighter',
         label: 'Fix the JS startup fire',
-        outcomeText: 'Their dashboard crashed. You ask for logs; they send emojis.',
+        outcomeText: 'Dashboard is down. They send you emojis instead of logs. You cry a little.',
         rewards: [
           { type: 'flag', flag: 'path-js' },
           { type: 'stat', stat: 'skill', delta: 2 },
@@ -87,12 +87,12 @@ export const choices: ChoiceNode[] = [
     id: 'branch-followup',
     chapterId: 3,
     title: 'Double Down',
-    narrative: 'Do you chase design retainers or ship a JS widget for passive income?',
+    narrative: 'Keep stacking design retainers or build a JS widget that hopefully prints rent?',
     options: [
       {
         id: 'css-retainer',
         label: 'Keep the CSS retainers',
-        outcomeText: 'You design three responsive variants and raise your rate.',
+        outcomeText: 'You ship three responsive variants and add “lead designer??” to your bio.',
         rewards: [
           { type: 'flag', flag: 'path-css-pro' },
           { type: 'money', amount: 40 },
@@ -102,7 +102,7 @@ export const choices: ChoiceNode[] = [
       {
         id: 'js-widget',
         label: 'Ship the JS widget',
-        outcomeText: 'You promise a dashboard that actually loads.',
+        outcomeText: 'You promise a dashboard that loads before the next rent hike.',
         rewards: [
           { type: 'flag', flag: 'path-js-widget' },
           { type: 'stat', stat: 'skill', delta: 3 },

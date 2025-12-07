@@ -15,10 +15,10 @@ export function HomePage() {
       <section className="relative py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="font-display text-5xl md:text-7xl font-bold text-kq-gold-400 mb-4 animate-glow">
-            KeyQuest
+            Broke Coder
           </h1>
           <p className="font-display text-xl md:text-2xl text-kq-dark-300 mb-8">
-            Chronicles of the Typing Realms
+            Fired, broke, and typing for rent money.
           </p>
           
           {currentCharacter ? (
@@ -72,26 +72,26 @@ export function HomePage() {
                   to="/realm-select"
                   className="px-8 py-4 bg-gradient-to-r from-kq-gold-500 to-kq-gold-600 text-kq-dark-900 font-display font-bold text-lg rounded-xl hover:from-kq-gold-400 hover:to-kq-gold-500 transition-all transform hover:scale-105 shadow-lg shadow-kq-gold-500/25"
                 >
-                  Start Adventure
+                  Start Survival Shift
                 </Link>
                 <Link
                   to="/training"
                   className="px-8 py-4 bg-kq-dark-700 text-white font-display font-bold text-lg rounded-xl hover:bg-kq-dark-600 transition-all border border-kq-dark-600"
                 >
-                  Training Grounds
+                  Practice Pit
                 </Link>
               </div>
             </div>
           ) : (
             <div className="space-y-6">
               <p className="text-kq-dark-400 text-lg">
-                Begin your typing adventure and become a legend!
+                Create your disaster avatar and start hustling before rent is due.
               </p>
               <Link
                 to="/character-create"
                 className="inline-block px-8 py-4 bg-gradient-to-r from-kq-gold-500 to-kq-gold-600 text-kq-dark-900 font-display font-bold text-lg rounded-xl hover:from-kq-gold-400 hover:to-kq-gold-500 transition-all transform hover:scale-105 shadow-lg shadow-kq-gold-500/25"
               >
-                Create Character
+                Create Your Chaos
               </Link>
             </div>
           )}

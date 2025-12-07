@@ -211,9 +211,9 @@ export function SettingsPage() {
           <section className="bg-kq-dark-800/50 backdrop-blur-sm rounded-xl p-6 border border-kq-dark-700">
             <h2 className="font-display text-lg text-white mb-4">About</h2>
             <div className="text-kq-dark-400 text-sm space-y-2">
-              <p>KeyQuest: Chronicles of the Typing Realms</p>
+              <p>Broke Coder: Survival Typing RPG</p>
               <p>Version 1.0.0</p>
-              <p>© 2024 KeyQuest Team</p>
+              <p>© 2024 Broke Coder Crew</p>
             </div>
           </section>
         </div>

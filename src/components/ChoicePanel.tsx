@@ -11,7 +11,7 @@ export function ChoicePanel({ node, onChoose, canSatisfy }: ChoicePanelProps) {
     return (
       <section className="panel choice-panel">
         <p className="eyebrow">Choices</p>
-        <p className="muted small">No active decisions right now.</p>
+        <p className="muted small">No decisions right now. Enjoy the quiet before another landlord text.</p>
       </section>
     );
   }
@@ -35,7 +35,7 @@ export function ChoicePanel({ node, onChoose, canSatisfy }: ChoicePanelProps) {
               onClick={() => met && onChoose(option.id)}
               disabled={!met}
             >
-              <div className="badge badge-story">outcome</div>
+              <div className="badge badge-story">plot twist</div>
               <h4>{option.label}</h4>
               <p className="muted">{option.outcomeText}</p>
               {!met && <p className="small muted">Requirements not met</p>}
