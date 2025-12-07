@@ -178,6 +178,12 @@ function GameScreen() {
     }
   }, [discoveredEnding, activeEndingId]);
 
+  useEffect(() => {
+    if (!modalOpen) {
+      handleCloseCelebration();
+    }
+  }, [modalOpen, handleCloseCelebration]);
+
 
   return (
     <div className="app-shell">
