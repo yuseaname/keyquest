@@ -251,6 +251,16 @@ body {
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.panel p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  margin: 0.5em 0;
 }
 
 .panel-header {
@@ -273,6 +283,15 @@ body {
   padding: 12px;
   margin-bottom: 12px;
   background: rgba(255, 255, 255, 0.02);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.story-block h2,
+.story-block h3 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .beats {
