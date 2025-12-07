@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChoicePanel } from './components/ChoicePanel';
 import { EffectsBar } from './components/EffectsBar';
 import { EndingsMenu } from './components/EndingsMenu';
@@ -69,6 +69,9 @@ function GameScreen() {
   const [goalTargets, setGoalTargets] = useState({ accuracy: currentLesson.goalAccuracy, wpm: currentLesson.goalWpm });
   const [showHackerPopup, setShowHackerPopup] = useState(false);
   const [hackerContext, setHackerContext] = useState<'lesson' | 'job'>('lesson');
+  const handleCloseCelebration = useCallback(() => {
+    setShowHackerPopup(false);
+  }, []);
 
   const currentChapter = chapters.find((c) => c.id === currentChapterId) ?? chapters[0];
   const currentHousing = housingOptions.find((h) => h.id === housingId);
@@ -111,7 +114,7 @@ function GameScreen() {
       setHackerContext(currentLesson.type === 'job' ? 'job' : 'lesson');
       setShowHackerPopup(true);
     } else {
-      setShowHackerPopup(false);
+      handleCloseCelebration();
     }
     setModalOpen(true);
   };
@@ -149,7 +152,7 @@ function GameScreen() {
     setActiveEndingId(undefined);
     setModalLesson(null);
     setModalResult(null);
-    setShowHackerPopup(false);
+    handleCloseCelebration();
     setStatusMessage('Progress reset. Fresh start!');
   };
 
@@ -294,7 +297,7 @@ function GameScreen() {
       <HackerCelebration
         visible={showHackerPopup}
         context={hackerContext}
-        onClose={() => setShowHackerPopup(false)}
+        onClose={handleCloseCelebration}
       />
     </div>
   );

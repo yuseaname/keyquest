@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import hackerCelebrationImg from '../../media/images/Hacker.png';
 
 // Asset: media/images/Hacker.png. Add more jokes by extending LESSON_MESSAGES or JOB_MESSAGES below.
@@ -33,6 +33,15 @@ export interface HackerCelebrationProps {
 export function HackerCelebration({ visible, onClose, context = 'lesson', messageOverride }: HackerCelebrationProps) {
   const [message, setMessage] = useState('');
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const latestOnClose = useRef(onClose);
+
+  useEffect(() => {
+    latestOnClose.current = onClose;
+  }, [onClose]);
+
+  const triggerClose = useCallback(() => {
+    latestOnClose.current();
+  }, [latestOnClose]);
 
   useEffect(() => {
     if (!visible) return;
@@ -42,21 +51,21 @@ export function HackerCelebration({ visible, onClose, context = 'lesson', messag
   useEffect(() => {
     if (!visible) return undefined;
     const timer = window.setTimeout(() => {
-      onClose();
+      triggerClose();
     }, 3600);
     return () => window.clearTimeout(timer);
-  }, [visible, onClose]);
+  }, [visible, triggerClose]);
 
   useEffect(() => {
     if (!visible) return undefined;
     const handler = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose();
+        triggerClose();
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [visible, onClose]);
+  }, [visible, triggerClose]);
 
   useEffect(() => {
     if (visible) {
@@ -72,15 +81,21 @@ export function HackerCelebration({ visible, onClose, context = 'lesson', messag
   }, [messageOverride, message]);
 
   return (
-    <div className="hacker-celebration-overlay" role="dialog" aria-modal="true" aria-label="Hacker celebration">
-      <div className="hacker-celebration-card">
+    <div
+      className="hacker-celebration-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Hacker celebration"
+      onMouseDown={triggerClose}
+    >
+      <div className="hacker-celebration-card" onMouseDown={(event) => event.stopPropagation()}>
         <div className="hacker-image-wrapper">
           <img src={hackerCelebrationImg} alt="Cartoon hacker celebrating" />
         </div>
         <p className="eyebrow">{context === 'job' ? 'Gig cleared' : 'Lesson conquered'}</p>
         <h2>Certified Keyboard Hacker!</h2>
         <p className="celebration-message">{subtitle}</p>
-        <button className="primary" ref={closeButtonRef} onClick={onClose}>
+        <button className="primary" ref={closeButtonRef} onClick={triggerClose}>
           Keep flexing
         </button>
       </div>
