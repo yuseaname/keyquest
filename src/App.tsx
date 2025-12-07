@@ -299,8 +299,12 @@ function GameContainer() {
 export function App() {
   return (
     <GameProvider>
-      <Header />
-      <GameContainer />
+      <div className="app-root">
+        <Header />
+        <div className="app-body">
+          <GameContainer />
+        </div>
+      </div>
     </GameProvider>
   );
 }
