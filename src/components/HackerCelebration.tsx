@@ -102,3 +102,5 @@ export function HackerCelebration({ visible, onClose, context = 'lesson', messag
     </div>
   );
 }
+
+export default HackerCelebration;

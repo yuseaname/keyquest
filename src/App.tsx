@@ -69,9 +69,15 @@ function GameScreen() {
   const [goalTargets, setGoalTargets] = useState({ accuracy: currentLesson.goalAccuracy, wpm: currentLesson.goalWpm });
   const [showHackerPopup, setShowHackerPopup] = useState(false);
   const [hackerContext, setHackerContext] = useState<'lesson' | 'job'>('lesson');
+  const [deferredModalOpen, setDeferredModalOpen] = useState(false);
+  
   const handleCloseCelebration = useCallback(() => {
     setShowHackerPopup(false);
-  }, []);
+    if (deferredModalOpen) {
+      setModalOpen(true);
+      setDeferredModalOpen(false);
+    }
+  }, [deferredModalOpen]);
 
   const currentChapter = chapters.find((c) => c.id === currentChapterId) ?? chapters[0];
   const currentHousing = housingOptions.find((h) => h.id === housingId);
@@ -113,10 +119,11 @@ function GameScreen() {
     if (outcome.passed) {
       setHackerContext(currentLesson.type === 'job' ? 'job' : 'lesson');
       setShowHackerPopup(true);
+      setDeferredModalOpen(true);
     } else {
       handleCloseCelebration();
+      setModalOpen(true);
     }
-    setModalOpen(true);
   };
 
   const handleNext = () => {
@@ -177,13 +184,6 @@ function GameScreen() {
       setEndingOpen(true);
     }
   }, [discoveredEnding, activeEndingId]);
-
-  useEffect(() => {
-    if (!modalOpen) {
-      handleCloseCelebration();
-    }
-  }, [modalOpen, handleCloseCelebration]);
-
 
   return (
     <div className="app-shell">
