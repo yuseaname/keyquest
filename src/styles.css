@@ -133,12 +133,12 @@ body {
   border-radius: 16px;
   padding: 16px 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  background: 
+  background:
     linear-gradient(135deg, rgba(19, 28, 44, 0.85) 0%, rgba(15, 21, 33, 0.9) 100%),
-    url('/broke_coder.png') center/cover no-repeat;
+    url('/broke_coder.png') center/contain no-repeat;
   background-color: #0f1521;
-  background-size: auto, cover;
-  background-position: 0 0, center;
+  background-size: auto, contain;
+  background-position: 0 0, center top;
   background-attachment: fixed, scroll;
 }
 
